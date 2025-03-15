@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="loginstyles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Local Login</h2>
+    <form id="localLoginForm">
+      <input type="email" name="email" placeholder="Email" required /><br>
+      <input type="password" name="password" placeholder="Password" required /><br>
+      <button type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+
+    <hr>
+
+    <h2>Or Login with Google</h2>
+    <button onclick="googleLogin()">Login with Google</button>
+  </div>
+
+  <script>
+    document.getElementById('localLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const email = formData.get('email');
+      const password = formData.get('password');
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/local/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          // Login success
+          alert(data.message);
+          // Redirect to diet form page (or any other page you want)
+          window.location.href = 'dietplan.html';
+        } else {
+          alert(data.error || 'Login failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    function googleLogin() {
+      window.location.href = 'http://localhost:5000/api/auth/google';
+    }
+  </script>
+</body>
+</html>

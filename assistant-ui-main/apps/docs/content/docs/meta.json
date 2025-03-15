@@ -1,0 +1,24 @@
+{
+  "title": "mdx",
+  "root": true,
+  "pages": [
+    "getting-started",
+    "---Guides---",
+    "...guides",
+    "---Copilots---",
+    "...copilots",
+    "---UI---",
+    "...ui",
+    "---Backends---",
+    "...runtimes",
+    "---Cloud---",
+    "...cloud",
+    "---Reference---",
+    "api-reference",
+    "concepts",
+    "migrations",
+    "legacy",
+    "components",
+    "reference"
+  ]
+}
