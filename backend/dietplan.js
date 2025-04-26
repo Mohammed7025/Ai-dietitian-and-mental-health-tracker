@@ -1,109 +1,202 @@
-// dietplan.js
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parser');
+const User = require('./user');
+const { DecisionTreeClassifier } = require('ml-cart');
 
-const axios = require('axios');
+// Load the dataset from CSV
+const dataset = [];
+fs.createReadStream(path.join(__dirname, 'dietplan.csv'))
+  .pipe(csv())
+  .on('data', (row) => {
+    dataset.push(row);
+  })
+  .on('end', () => {
+    console.log('✅ Dataset loaded successfully.');
+  });
 
-// Rule-Based Algorithm
-function generateDietPlanRuleBased(user) {
-  let plan = {};
+// Wait until dataset is loaded before generating plan
+const waitForDataset = new Promise((resolve) => {
+  if (dataset.length) {
+    resolve();
+  } else {
+    fs.createReadStream(path.join(__dirname, 'dietplan.csv'))
+      .pipe(csv())
+      .on('data', (row) => dataset.push(row))
+      .on('end', () => resolve());
+  }
+});
 
-  // Base recommendations based on BMI Category
-  switch (user.bmiCategory) {
-    case 'Underweight':
-      plan.calorieAdvice = 'Increase calories by 10-20% above maintenance.';
-      break;
-    case 'Normal weight':
-      plan.calorieAdvice = 'Maintain current calorie intake with balanced meals.';
-      break;
-    case 'Overweight':
-      plan.calorieAdvice = 'Reduce calories by 10-15% below maintenance, focus on whole foods.';
-      break;
-    case 'Obese':
-      plan.calorieAdvice = 'Reduce calories by 20% or more below maintenance (with medical supervision).';
-      break;
-    default:
-      plan.calorieAdvice = 'Maintain balanced nutrition.';
+// --- Mapping dictionaries for decision tree feature encoding ---
+const bmiMapping = { 'underweight': 0, 'normal weight': 1, 'overweight': 2, 'obese': 3 };
+const weightGoalMapping = { 'maintain': 0, 'gain': 1, 'lose': 2, 'muscle gain': 3 };
+const sleepMapping = { '< 5 hours': 0, '5-7 hours': 1, '> 7 hours': 2 };
+const dietTypeMapping = { 'vegetarian': 0, 'vegan': 1, 'keto': 2, 'low carb': 3, 'mediterranean': 4 };
+const religiousMapping = { 'halal': 0, 'kosher': 1, 'none': 2 };
+const activityMapping = { 'sedentary': 0, 'moderate': 1, 'active': 2 };
+
+// Global variable to cache the decision tree model
+let decisionTreeModel = null;
+let trainingData = [];
+let trainingLabels = [];
+
+// Function to prepare training data and train the decision tree model
+function trainDecisionTree() {
+  // Prepare training data from the dataset.
+  // We assume each row in the CSV has the necessary fields.
+  trainingData = [];
+  trainingLabels = [];
+  dataset.forEach((row, index) => {
+    // Normalize/cast text to lowercase and trim spaces
+    const bmiCat = row['BMI Category'].toLowerCase().trim();
+    const weightGoal = row['Weight Goal'].toLowerCase().trim();
+    const sleepHrs = row['Sleep Hours'].toLowerCase().trim();
+    const dietType = row['Diet Type'].toLowerCase().trim();
+    const religious = row['Religious Restriction'].toLowerCase().trim();
+    const activity = row['Activity Level'].toLowerCase().trim();
+
+    // Create a numeric feature vector
+    const features = [
+      bmiMapping[bmiCat] !== undefined ? bmiMapping[bmiCat] : -1,
+      weightGoalMapping[weightGoal] !== undefined ? weightGoalMapping[weightGoal] : -1,
+      sleepMapping[sleepHrs] !== undefined ? sleepMapping[sleepHrs] : -1,
+      dietTypeMapping[dietType] !== undefined ? dietTypeMapping[dietType] : -1,
+      religiousMapping[religious] !== undefined ? religiousMapping[religious] : -1,
+      activityMapping[activity] !== undefined ? activityMapping[activity] : -1
+    ];
+    trainingData.push(features);
+    trainingLabels.push(index); // Use the index as the label
+  });
+
+  // Train the decision tree classifier
+  decisionTreeModel = new DecisionTreeClassifier();
+  decisionTreeModel.train(trainingData, trainingLabels);
+}
+
+// Function to predict a fallback meal plan using the decision tree
+function decisionTreePredict(user) {
+  // Train the model if it hasn't been trained yet
+  if (!decisionTreeModel) {
+    trainDecisionTree();
+  }
+  // Prepare user feature vector using same mappings
+  // Assume user object has: height, weight, weightGoal, sleepHours, dietType, religiousRestrictions, activityLevel
+  const heightInMeters = user.height / 100;
+  const bmi = user.weight / (heightInMeters * heightInMeters);
+  let bmiCategory = '';
+  if (bmi < 18.5) {
+    bmiCategory = 'underweight';
+  } else if (bmi >= 18.5 && bmi < 24.9) {
+    bmiCategory = 'normal weight';
+  } else if (bmi >= 25 && bmi < 29.9) {
+    bmiCategory = 'overweight';
+  } else {
+    bmiCategory = 'obese';
+  }
+  // Normalize text inputs
+  const weightGoal = user.weightGoal.toLowerCase().trim();
+  const sleepHrs = user.sleepHours.toLowerCase().trim();
+  const dietType = user.dietType.toLowerCase().trim();
+  const religious = user.religiousRestrictions.toLowerCase().trim();
+  const activity = user.activityLevel.toLowerCase().trim();
+
+  const userFeatures = [
+    bmiMapping[bmiCategory] !== undefined ? bmiMapping[bmiCategory] : -1,
+    weightGoalMapping[weightGoal] !== undefined ? weightGoalMapping[weightGoal] : -1,
+    sleepMapping[sleepHrs] !== undefined ? sleepMapping[sleepHrs] : -1,
+    dietTypeMapping[dietType] !== undefined ? dietTypeMapping[dietType] : -1,
+    religiousMapping[religious] !== undefined ? religiousMapping[religious] : -1,
+    activityMapping[activity] !== undefined ? activityMapping[activity] : -1
+  ];
+
+  // Use the decision tree to predict the best matching row index
+  const predictedLabel = decisionTreeModel.predict([userFeatures])[0];
+  // Retrieve the predicted meal plan from the dataset
+  return dataset[predictedLabel];
+}
+
+// Generate personalized diet plan
+async function generateCombinedDietPlan(user) {
+  await waitForDataset;
+
+  const heightInMeters = user.height / 100;
+  const bmi = user.weight / (heightInMeters * heightInMeters);
+  let bmiCategory;
+
+  if (bmi < 18.5) {
+    bmiCategory = 'Underweight';
+  } else if (bmi < 24.9) {
+    bmiCategory = 'Normal weight';
+  } else if (bmi < 29.9) {
+    bmiCategory = 'Overweight';
+  } else {
+    bmiCategory = 'Obese';
   }
 
-  // Adjustments based on Medical Conditions
-  plan.specialNotes = '';
-  if (user.medical_conditions && Array.isArray(user.medical_conditions)) {
-    if (user.medical_conditions.includes('Diabetes')) {
-      plan.specialNotes += 'Focus on low GI foods and avoid refined sugars. ';
-    }
-    if (user.medical_conditions.includes('Hypertension')) {
-      plan.specialNotes += 'Limit sodium and incorporate potassium-rich foods. ';
-    }
-  }
+  let sleepCategory;
+  if (user.sleepHours < 5) sleepCategory = '< 5 hours';
+  else if (user.sleepHours > 7) sleepCategory = '> 7 hours';
+  else sleepCategory = '5-7 hours';
 
-  // Exclude Allergens
-  plan.allergyNotes = '';
-  if (user.allergies && Array.isArray(user.allergies)) {
-    if (user.allergies.includes('Dairy')) {
-      plan.allergyNotes += 'Exclude dairy products and consider plant-based alternatives. ';
-    }
-    if (user.allergies.includes('Gluten')) {
-      plan.allergyNotes += 'Use gluten-free grains like quinoa and rice. ';
-    }
-  }
+  // Existing rule-based filtering logic
+  let matchingMeal = dataset.find((item) =>
+    item['BMI Category'].toLowerCase().trim() === bmiCategory.toLowerCase().trim() &&
+    item['Weight Goal'].toLowerCase().trim() === user.weightGoal.toLowerCase().trim() &&
+    item['Sleep Hours'].toLowerCase().trim() === sleepCategory.toLowerCase().trim() &&
+    (item['Diet Type'].toLowerCase().includes(user.dietType.toLowerCase().trim()) || 
+     item['Diet Type'].toLowerCase() === 'any') &&
+    (user.religiousRestrictions.toLowerCase().trim().includes(item['Religious Restriction'].toLowerCase().trim()) || 
+     item['Religious Restriction'].toLowerCase().trim() === 'none') &&
+    (item['Activity Level'].toLowerCase().trim() === user.activityLevel.toLowerCase().trim() || 
+     item['Activity Level'].toLowerCase().trim() === 'any') &&
+    // Exclude allergens
+    (!user.allergies || !item['Allergens'].toLowerCase().includes(user.allergies.toLowerCase().trim())) &&
+    // Include suitable medical conditions
+    (!user.medical_conditions || 
+     item['Medical Conditions'].toLowerCase().includes(user.medical_conditions.toLowerCase().trim()))
+  );
 
-  // Dietary Preference Adjustments
-  plan.dietNotes = '';
-  if (user.dietType) {
-    if (user.dietType.toLowerCase() === 'vegan') {
-      plan.dietNotes += 'Ensure adequate protein from legumes, tofu, and tempeh. ';
-    }
-    if (user.dietType.toLowerCase() === 'keto') {
-      plan.dietNotes += 'Emphasize healthy fats and low-carb vegetables. ';
-    }
+  // If no exact match found, fall back to decision tree prediction
+  if (!matchingMeal) {
+    console.log('⚠️ No exact match found, using decision tree fallback.');
+    matchingMeal = decisionTreePredict(user);
   }
+  
+  const plan = matchingMeal
+    ? {
+        bmi: bmi.toFixed(2),
+        bmiCategory,
+        totalCalories: matchingMeal['Total Calories'] || "N/A",
+        breakfast: matchingMeal['Breakfast'] || "No suitable meal found",
+        breakfastCalories: matchingMeal['Breakfast_Calories'] || "N/A",
+        breakfastDescription: matchingMeal['Breakfast_Description'] || "N/A",
+        morningSnack: matchingMeal['Morning Snack'] || "N/A",
+        morningSnackCalories: matchingMeal['Morning Snack_Calories'] || "N/A",
+        morningSnackDescription: matchingMeal['Morning Snack_Description'] || "N/A",
+        lunch: matchingMeal['Lunch'] || "N/A",
+        lunchCalories: matchingMeal['Lunch_Calories'] || "N/A",
+        lunchDescription: matchingMeal['Lunch_Description'] || "N/A",
+        eveningSnack: matchingMeal['Evening Snack'] || "N/A",
+        eveningSnackCalories: matchingMeal['Evening Snack_Calories'] || "N/A",
+        eveningSnackDescription: matchingMeal['Evening Snack_Description'] || "N/A",
+        dinner: matchingMeal['Dinner'] || "N/A",
+        dinnerCalories: matchingMeal['Dinner_Calories'] || "N/A",
+        dinnerDescription: matchingMeal['Dinner_Description'] || "N/A",
+        allergens: matchingMeal['Allergens'] || "N/A",
+        medicalSuitability: matchingMeal['Medical Conditions'] || "N/A",
+        dietType: matchingMeal['Diet Type'] || "N/A",
+        religiousRestriction: matchingMeal['Religious Restriction'] || "N/A"
+      }
+    : { message: "No suitable meal found. Please consult a dietitian." };
 
-  // Weight Goal Adjustments
-  plan.goalNotes = '';
-  if (user.weightGoal) {
-    if (user.weightGoal === 'gain') {
-      plan.goalNotes += 'Increase calorie intake with nutrient-dense foods and proteins. ';
-    } else if (user.weightGoal === 'lose') {
-      plan.goalNotes += 'Focus on a slight calorie deficit while maintaining protein levels. ';
-    } else if (user.weightGoal === 'muscleGain') {
-      plan.goalNotes += 'Increase protein intake and incorporate strength training. ';
-    }
-  }
+  // Update the user's record with the generated plan
+  await User.findByIdAndUpdate(
+    user._id,
+    { dietPlan: plan },
+    { new: true } // Return the updated user document
+  );
 
   return plan;
 }
 
-// Decision Tree Algorithm (Stub example)
-async function generateDietPlanDecisionTree(user) {
-  try {
-    // Create a feature vector (customize as needed)
-    const featureVector = {
-      bmi: user.bmi,
-      age: user.age,
-      activityLevel: user.activityLevel,
-    };
-
-    // Replace with the URL of your decision tree service
-    const response = await axios.post('http://localhost:6000/predict', featureVector);
-    return response.data.predictedPlan;
-  } catch (error) {
-    console.error('Decision tree prediction error:', error);
-    return null;
-  }
-}
-
-// Combined Algorithm
-async function generateCombinedDietPlan(user) {
-  const ruleBasedPlan = generateDietPlanRuleBased(user);
-  const decisionTreePlan = await generateDietPlanDecisionTree(user);
-
-  return {
-    ruleBased: ruleBasedPlan,
-    decisionTree: decisionTreePlan,
-  };
-}
-
-module.exports = {
-  generateDietPlanRuleBased,
-  generateDietPlanDecisionTree,
-  generateCombinedDietPlan,
-};
+module.exports = { generateCombinedDietPlan };

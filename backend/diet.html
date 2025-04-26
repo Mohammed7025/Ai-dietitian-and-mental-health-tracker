@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Personalized Diet Plan</title>
+  <link rel="stylesheet" href="diet1.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your Personalized Diet Plan</h1>
+
+    <table id="dietPlanTable">
+      <thead>
+        <tr>
+          <th>Meal Time</th>
+          <th>Meal Name</th>
+          <th>Calories</th>
+          <th>Description</th>
+          <th>Allergens</th>
+          <th>Medical Suitability</th>
+          <th>Diet Type</th>
+          <th>Religious Restriction</th>
+      
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Meal data rows will be added here dynamically -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><b>Total Calories</b></td>
+          <td id="totalCaloriesCell"><b>N/A</b></td>
+          <td colspan="6">-</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="error-message" id="error-message" style="display: none;">
+      <p>❌ No suitable meal plan found. Please update your profile for better recommendations.</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get('userId');
+
+      if (!userId) {
+        alert("User ID missing. Please submit your details first.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:5000/generate-plan/${userId}`);
+        const plan = await response.json();
+
+        const tbody = document.querySelector("#dietPlanTable tbody");
+
+        if (!plan || plan.message) {
+          document.getElementById('error-message').style.display = 'block';
+          return;
+        }
+
+        tbody.innerHTML = ''; // Clear previous data
+
+        const meals = [
+          { mealTime: 'Breakfast', data: plan.breakfast, calories: plan.breakfastCalories, description: plan.breakfastDescription },
+          { mealTime: 'Morning Snack', data: plan.morningSnack, calories: plan.morningSnackCalories, description: plan.morningSnackDescription },
+          { mealTime: 'Lunch', data: plan.lunch, calories: plan.lunchCalories, description: plan.lunchDescription },
+          { mealTime: 'Evening Snack', data: plan.eveningSnack, calories: plan.eveningSnackCalories, description: plan.eveningSnackDescription },
+          { mealTime: 'Dinner', data: plan.dinner, calories: plan.dinnerCalories, description: plan.dinnerDescription }
+        ];
+
+        let totalCalories = 0;
+
+        meals.forEach(meal => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${meal.mealTime}</td>
+            <td>${meal.data}</td>
+            <td>${meal.calories || "N/A"}</td>
+            <td>${meal.description || "N/A"}</td>
+            <td>${plan.allergens}</td>
+            <td>${plan.medicalSuitability}</td>
+            <td>${plan.dietType}</td>
+            <td>${plan.religiousRestriction}</td>
+           
+          `;
+
+          if (!isNaN(parseInt(meal.calories))) {
+            totalCalories += parseInt(meal.calories);
+          }
+
+          tbody.appendChild(row);
+        });
+
+        document.getElementById('totalCaloriesCell').textContent = totalCalories || "N/A";
+
+      } catch (error) {
+        console.error("Error fetching diet plan:", error.message);
+        document.getElementById('error-message').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

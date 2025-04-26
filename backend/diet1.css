@@ -1,0 +1,79 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f7f3;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2e7d32;  /* Dark Green Title */
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+thead {
+  background-color: #4CAF50;  /* Green Header */
+  color: #fff; /* White text in header */
+  font-weight: bold;
+  text-align: center;
+}
+
+thead th {
+  padding: 12px;
+  font-size: 18px;
+  border: 1px solid #388E3C; 
+}
+
+tbody tr {
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+  background-color: #e8f5e9;  /* Light green hover */
+}
+
+tbody td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+tfoot {
+  background-color: #A5D6A7; /* Soft green for total calories row */
+  font-weight: bold;
+  text-align: center;
+}
+
+tfoot td {
+  padding: 10px;
+  border: 1px solid #388E3C;
+}
+
+.error-message {
+  text-align: center;
+  color: #d32f2f;  /* Red warning text */
+  margin-top: 20px;
+  font-weight: bold;
+}

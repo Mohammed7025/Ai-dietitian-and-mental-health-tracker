@@ -1,339 +1,276 @@
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Health and Diet Form</title>
-      <link rel="stylesheet" href="diet.css">
-      
-    </head>
-    <body>
-      <div class="container">
-        <h1>Health and Diet Information Form</h1>
-        <form id="healthForm" method="POST" action="http://localhost:5000/submit">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health and Diet Form</title>
+  <link rel="stylesheet" href="diet.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Health and Diet Information Form</h1>
+    <form id="healthForm" method="POST" action="http://localhost:5000/submit">
+      <!-- Hidden input to store the userId -->
+      <input type="hidden" name="userId" id="userId" value="">
 
-
-          <h2>1. Basic Information</h2>
-          <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <div class="form-error" id="nameError">Please enter your name.</div>
-          </div>
-
-          <div class="form-group">
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" min="1" required>
-            <div class="form-error" id="ageError">Please enter a valid age.</div>
-          </div>
-
-          <div class="form-group">
-            <label>Gender:</label>
-            <div class="radio-group">
-              <input type="radio" id="male" name="gender" value="male" required>
-              <label for="male">Male</label>
-            </div>
-            <div class="radio-group">
-              <input type="radio" id="female" name="gender" value="female">
-              <label for="female">Female</label>
-            </div>
-            <div class="form-error" id="genderError">Please select a gender.</div>
-          </div>
-
-          <div class="form-group">
-            <label for="height">Height (cm):</label>
-            <input type="number" id="height" name="height" min="50" required>
-            <div class="form-error" id="heightError">Please enter a valid height.</div>
-          </div>
-
-          <div class="form-group">
-            <label for="weight">Weight (kg):</label>
-            <input type="number" id="weight" name="weight" min="20" required>
-            <div class="form-error" id="weightError">Please enter a valid weight.</div>
-          </div>
-
-          <div class="bmi-result" id="bmiResult">
-            <p><b>BMI:</b> <span id="bmiValue"></span></p>
-            <p><b>Category:</b> <span id="bmiCategory"></span></p>
-          </div>
-
-          <h2>2. Health & Medical Data</h2>
-
-          <fieldset>
-            <legend>Allergies</legend>
-            <label for="allergy-nuts">
-              <input type="checkbox" id="allergy-nuts" name="allergies[]" value="Nuts"> Nuts
-            </label><br>
-            <label for="allergy-dairy">
-              <input type="checkbox" id="allergy-dairy" name="allergies[]" value="Dairy"> Dairy
-            </label><br>
-            <label for="allergy-gluten">
-              <input type="checkbox" id="allergy-gluten" name="allergies[]" value="Gluten"> Gluten
-            </label><br>
-            <label for="allergy-shellfish">
-              <input type="checkbox" id="allergy-shellfish" name="allergies[]" value="Shellfish"> Shellfish
-            </label><br>
-            <label for="allergy-soy">
-              <input type="checkbox" id="allergy-soy" name="allergies[]" value="Soy"> Soy
-            </label>
-          </fieldset>
-          
-          <!-- Medical Conditions Section -->
-          <fieldset>
-            <legend>Medical Conditions</legend>
-            <label for="condition-diabetes">
-              <input type="checkbox" id="condition-diabetes" name="medical_conditions[]" value="Diabetes"> Diabetes
-            </label><br>
-            <label for="condition-hypertension">
-              <input type="checkbox" id="condition-hypertension" name="medical_conditions[]" value="Hypertension"> Hypertension
-            </label><br>
-            <label for="condition-heart">
-              <input type="checkbox" id="condition-heart" name="medical_conditions[]" value="Heart Disease"> Heart Disease
-            </label><br>
-            <label for="condition-kidney">
-              <input type="checkbox" id="condition-kidney" name="medical_conditions[]" value="Kidney Issues"> Kidney Issues
-            </label><br>
-            <label for="condition-asthma">
-              <input type="checkbox" id="condition-asthma" name="medical_conditions[]" value="Asthma"> Asthma
-            </label>
-          </fieldset>
-
-          <div class="form-group">
-            <label for="medications">Current Medications:</label>
-            <input type="text" id="medications" name="medications">
-          </div>
-
-          <div class="form-group">
-            <label for="deficiencies">Deficiencies:</label>
-            <input type="text" id="deficiencies" name="deficiencies">
-          </div>
-
-          <h2>3. Dietary Preferences & Restrictions</h2>
-
-          <div class="form-group">
-            <label for="dietType">Diet Type:</label>
-            <select id="dietType" name="dietType">
-              <option value="">Select Diet Type</option>
-              <option value="vegetarian">Vegetarian</option>
-              <option value="vegan">Vegan</option>
-              <option value="keto">Keto</option>
-              <option value="paleo">Paleo</option>
-              <option value="pescatarian">Pescatarian</option>
-              <option value="lowCarb">Low Carb</option>
-              <option value="mediterranean">Mediterranean</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="religiousRestrictions">Religious/Ethical Restrictions:</label>
-            <select id="religiousRestrictions" name="religiousRestrictions">
-              <option value="">Select Restriction</option>
-              <option value="halal">Halal</option>
-              <option value="kosher">Kosher</option>
-              <option value="jain">Jain</option>
-              <option value="none">None</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="foodsLikedDisliked">Foods Liked/Disliked:</label>
-            <textarea id="foodsLikedDisliked" name="foodsLikedDisliked" rows="4"></textarea>
-          </div>
-
-          <h2>4. Activity & Lifestyle</h2>
-
-          <div class="form-group">
-            <label for="activityLevel">Daily Activity Level:</label>
-            <select id="activityLevel" name="activityLevel">
-              <option value="">Select Activity Level</option>
-              <option value="sedentary">Sedentary</option>
-              <option value="moderate">Moderate</option>
-              <option value="active">Active</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="sleepHours">Sleep Hours:</label>
-            <select id="sleepHours" name="sleepHours">
-              <option value="">Select Hours</option>
-              <!-- Generate options from 0 to 24 -->
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-              <option value="13">13</option>
-              <option value="14">14</option>
-              <option value="15">15</option>
-              <option value="16">16</option>
-              <option value="17">17</option>
-              <option value="18">18</option>
-              <option value="19">19</option>
-              <option value="20">20</option>
-              <option value="21">21</option>
-              <option value="22">22</option>
-              <option value="23">23</option>
-              <option value="24">24</option>
-            </select>
-          </div>
-
-          <h2>5. Weight Goals</h2>
-
-          <div class="form-group weight-goals">
-            <label>Weight Goals:</label>
-            <div class="radio-group">
-              <input type="radio" id="maintain" name="weightGoal" value="maintain" required>
-              <label for="maintain">Maintain</label>
-            </div>
-            <div class="radio-group">
-              <input type="radio" id="gain" name="weightGoal" value="gain">
-              <label for="gain">Gain</label>
-            </div>
-            <div class="radio-group">
-              <input type="radio" id="lose" name="weightGoal" value="lose">
-              <label for="lose">Lose</label>
-            </div>
-            <div class="radio-group">
-              <input type="radio" id="muscleGain" name="weightGoal" value="muscleGain">
-              <label for="muscleGain">Muscle Gain</label>
-            </div>
-            <div class="form-error" id="weightGoalError">Please select a weight goal.</div>
-          </div>
-
-          <button type="submit" id="submitButton">Submit</button>
-          <div class="loading-spinner"></div>
-        </form>
+      <h2>1. Basic Information</h2>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <div class="form-error" id="nameError">Please enter your name.</div>
       </div>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const form = document.getElementById('healthForm');
-          const heightInput = document.getElementById('height');
-          const weightInput = document.getElementById('weight');
-          const bmiValueSpan = document.getElementById('bmiValue');
-          const bmiCategorySpan = document.getElementById('bmiCategory');
-          const bmiResultDiv = document.getElementById('bmiResult');
-          const allergiesSelect = document.getElementById('allergies');
-          const medicalConditionsSelect = document.getElementById('medicalConditions');
-          const selectedAllergiesDiv = document.getElementById('selectedAllergies');
-          const selectedMedicalConditionsDiv = document.getElementById('selectedMedicalConditions');
-          const submitButton = document.getElementById('submitButton');
-          const loadingSpinner = document.querySelector('.loading-spinner');
-          const formErrors = document.querySelectorAll('.form-error');
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="1" required>
+        <div class="form-error" id="ageError">Please enter a valid age.</div>
+      </div>
 
-          function calculateBMI() {
+      <div class="form-group">
+        <label>Gender:</label>
+        <div class="radio-group">
+          <input type="radio" id="male" name="gender" value="male" required>
+          <label for="male">Male</label>
+        </div>
+        <div class="radio-group">
+          <input type="radio" id="female" name="gender" value="female">
+          <label for="female">Female</label>
+        </div>
+        <div class="form-error" id="genderError">Please select a gender.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height" min="50" required>
+        <div class="form-error" id="heightError">Please enter a valid height.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" min="20" required>
+        <div class="form-error" id="weightError">Please enter a valid weight.</div>
+      </div>
+
+      <div class="bmi-result" id="bmiResult">
+        <p><b>BMI:</b> <span id="bmiValue"></span></p>
+        <p><b>Category:</b> <span id="bmiCategory"></span></p>
+      </div>
+
+      <h2>2. Health & Medical Data</h2>
+
+      <div class="form-group">
+        <label for="allergies">Allergies:</label>
+        <select id="allergies" name="allergies">
+          <option value="">Select Allergy</option>
+          <option value="Nuts">Nuts</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Gluten">Gluten</option>
+          <option value="Soy">Soy</option>
+          <option value="None">None</option>
+        </select>
+    </div>
+    
+      <!-- Medical Conditions Section -->
+      
+      <div class="form-group">
+        <label for="medical_conditions">Medical Conditions:</label>
+        <select id="medical_conditions" name="medical_conditions">
+          <option value="">Select Medical condition</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Hypertension">Hypertension</option>
+          <option value="Heart Disease">Heart Disease</option>
+          <option value="Kidney Issues">Kidney Issues</option>
+          <option value="Asthma">Asthma</option>
+          <option value="None">None</option>
+        </select>
+    </div>
+    
+
+      <h2>3. Dietary Preferences & Restrictions</h2>
+
+      <div class="form-group">
+        <label for="dietType">Diet Type:</label>
+        <select id="dietType" name="dietType">
+          <option value="">Select Diet Type</option>
+          <option value="vegetarian">Vegetarian</option>
+          <option value="vegan">Vegan</option>
+          <option value="keto">Keto</option>
+          <option value="low Carb">Low Carb</option>
+          <option value="mediterranean">Mediterranean</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="religiousRestrictions">Religious/Ethical Restrictions:</label>
+        <select id="religiousRestrictions" name="religiousRestrictions">
+          <option value="">Select Restriction</option>
+          <option value="halal">Halal</option>
+          <option value="kosher">Kosher</option>
+          <option value="none">None</option>
+         
+        </select>
+      </div>
+
+
+      <h2>3. Activity & Lifestyle</h2>
+
+      <div class="form-group">
+        <label for="activityLevel">Daily Activity Level:</label>
+        <select id="activityLevel" name="activityLevel">
+          <option value="">Select Activity Level</option>
+          <option value="sedentary">Sedentary</option>
+          <option value="moderate">Moderate</option>
+          <option value="active">Active</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="sleepHours">Sleep Hours:</label>
+        <select id="sleepHours" name="sleepHours">
+          <option value="">Select Hours</option>
+          <option value="< 5 hours">&lt; 5 hours</option>
+          <option value="5-7 hours">5-7 hours</option>
+          <option value="> 7 hours">&gt; 7 hours</option>
+        </select>
+        
+      </div>
+
+      <h2>4. Weight Goals</h2>
+
+      <div class="form-group weight-goals">
+        <label>Weight Goals:</label>
+        <div class="radio-group">
+          <input type="radio" id="maintain" name="weightGoal" value="maintain" required>
+          <label for="maintain">Maintain</label>
+        </div>
+        <div class="radio-group">
+          <input type="radio" id="gain" name="weightGoal" value="gain">
+          <label for="gain">Gain</label>
+        </div>
+        <div class="radio-group">
+          <input type="radio" id="lose" name="weightGoal" value="lose">
+          <label for="lose">Lose</label>
+        </div>
+        <div class="radio-group">
+          <input type="radio" id="muscleGain" name="weightGoal" value="muscle Gain">
+          <label for="muscleGain">Muscle Gain</label>
+        </div>
+        <div class="form-error" id="weightGoalError">Please select a weight goal.</div>
+      </div>
+
+      <button type="submit" id="submitButton">Submit</button>
+      <div class="loading-spinner"></div>
+    </form>
+  </div>
+ 
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let userId = localStorage.getItem('userId');
+    
+        // Ensure userId is correctly formatted (ObjectId validation)
+        if (userId && /^[a-f\d]{24}$/i.test(userId)) {
+            document.getElementById('userId').value = userId;
+        } else {
+            alert("Please log in first or ensure valid userId!");
+            return;
+        }
+    
+        // ========== BMI CALCULATION LOGIC ==========
+        function calculateBMI() {
+            const heightInput = document.getElementById('height');
+            const weightInput = document.getElementById('weight');
+            const bmiValueSpan = document.getElementById('bmiValue');
+            const bmiCategorySpan = document.getElementById('bmiCategory');
+            const bmiResultDiv = document.getElementById('bmiResult');
+    
             const height = parseFloat(heightInput.value) / 100; // Convert cm to meters
             const weight = parseFloat(weightInput.value);
-
+    
             if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
-              bmiValueSpan.textContent = '';
-              bmiCategorySpan.textContent = '';
-              bmiResultDiv.style.display = 'none';
-              return;
+                bmiValueSpan.textContent = '';
+                bmiCategorySpan.textContent = '';
+                bmiResultDiv.style.display = 'none';
+                return;
             }
-
+    
             const bmi = weight / (height * height);
-            bmiValueSpan.textContent = bmi.toFixed(2);
+            bmiValueSpan.textContent = bmi.toFixed(2); // Displays BMI value with 2 decimal places
             bmiResultDiv.style.display = 'block';
-
+    
+            // BMI Category Classification
             let category = '';
             if (bmi < 18.5) {
-              category = 'Underweight';
+                category = 'Underweight';
             } else if (bmi >= 18.5 && bmi < 24.9) {
-              category = 'Normal weight';
+                category = 'Normal weight';
             } else if (bmi >= 25 && bmi < 29.9) {
-              category = 'Overweight';
+                category = 'Overweight';
             } else {
-              category = 'Obese';
+                category = 'Obese';
             }
-            bmiCategorySpan.textContent = category;
-          }
-
-          function updateSelectedOptions(selectElement, displayElement) {
-            displayElement.innerHTML = '<p><b>Selected:</b></p>';
-            const selectedOptions = Array.from(selectElement.selectedOptions).map(option => option.text);
-            if (selectedOptions.length > 0) {
-              selectedOptions.forEach(optionText => {
-                displayElement.innerHTML += `<p>${optionText}</p>`;
-              });
-            } else {
-              displayElement.innerHTML += '<p>None selected</p>';
-            }
-          }
-
-          function validateForm() {
-            let isValid = true;
-            formErrors.forEach(error => error.classList.remove('active'));
-
-            // Basic Information Validation
-            if (form.name.value.trim() === '') {
-              document.getElementById('nameError').classList.add('active');
-              isValid = false;
-            }
-            if (isNaN(form.age.value) || form.age.value <= 0) {
-              document.getElementById('ageError').classList.add('active');
-              isValid = false;
-            }
-            if (!document.querySelector('input[name="gender"]:checked')) {
-              document.getElementById('genderError').classList.add('active');
-              isValid = false;
-            }
-            if (isNaN(form.height.value) || form.height.value <= 0) {
-              document.getElementById('heightError').classList.add('active');
-              isValid = false;
-            }
-            if (isNaN(form.weight.value) || form.weight.value <= 0) {
-              document.getElementById('weightError').classList.add('active');
-              isValid = false;
-            }
-            if (!document.querySelector('input[name="weightGoal"]:checked')) {
-              document.getElementById('weightGoalError').classList.add('active');
-              isValid = false;
-            }
-
-            return isValid;
-          }
-
-          heightInput.addEventListener('input', calculateBMI);
-          weightInput.addEventListener('input', calculateBMI);
-
-          allergiesSelect.addEventListener('change', function() {
-            updateSelectedOptions(allergiesSelect, selectedAllergiesDiv);
-          });
-
-          medicalConditionsSelect.addEventListener('change', function() {
-            updateSelectedOptions(medicalConditionsSelect, selectedMedicalConditionsDiv);
-          });
-
-          // Initial display of selected options
-          updateSelectedOptions(allergiesSelect, selectedAllergiesDiv);
-          updateSelectedOptions(medicalConditionsSelect, selectedMedicalConditionsDiv);
-
-          form.addEventListener('submit', function(event) {
+    
+            bmiCategorySpan.textContent = category; // Display BMI Category
+        }
+    
+        // Event listeners for BMI calculation on input
+        document.getElementById('height').addEventListener('input', calculateBMI);
+        document.getElementById('weight').addEventListener('input', calculateBMI);
+    
+        // ========== FORM SUBMISSION LOGIC ==========
+        document.getElementById('healthForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            if (!validateForm()) {
-              return; // Stop submission if validation fails
-            }
+    
+            const form = document.getElementById('healthForm');
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.querySelector('.loading-spinner');
+            const formData = new FormData(form);
+            
+            let data = {};
+            formData.forEach((value, key) => {
+                if (key.endsWith('[]')) {
+                    let baseKey = key.replace('[]', '');
+                    if (!data[baseKey]) {
+                        data[baseKey] = [];
+                    }
+                    data[baseKey].push(value);
+                } else {
+                    data[key] = value;
+                }
+            });
 
-            // Simulate form submission with loading animation
+            // ✅ Ensure `sleepHours` is included and defaults to '5-7 hours' if empty
+            data['sleepHours'] = document.getElementById('sleepHours').value || '5-7 hours';
+
+            data['userId'] = localStorage.getItem('userId');
+    
             submitButton.style.display = 'none';
             loadingSpinner.classList.add('active');
-            setTimeout(() => {
-              alert('Form submitted! (Data would be sent to a server here)');
-              submitButton.style.display = 'block';
-              loadingSpinner.classList.remove('active');
-            }, 2000); // Simulate a 2-second submission process
-          });
+    
+            try {
+                const response = await fetch('http://localhost:5000/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+    
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    window.location.href = `http://localhost:5000/diet.html?userId=${data.userId}`;
+                } else {
+                    alert('Submission error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Submission error: ' + error.message);
+            } finally {
+                submitButton.style.display = 'block';
+                loadingSpinner.classList.remove('active');
+            }
         });
-      </script>
-    </body>
-    </html>
+    });
+</script>
+
+</body>
+</html> 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MindMate Chat + Graph</title>
+  <!-- Link to your external CSS -->
+  <link rel="stylesheet" href="c.css">
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Page Heading --> <h1 class="main-heading">🌌 MindMate 🌌</h1>
+                         <h2>Your empathetic mental health support companion.</h2>
+
+    <!-- Chat Section -->
+    <div class="chat-section">
+      <!-- Chat Display Box -->
+      <div id="chat-box">
+        <div class="chat-message bot-message">Hello! How are you feeling today? 😊</div>
+        
+      </div>
+
+      <!-- Input Form -->
+      <form id="chat-form">
+        <input type="text" id="user-input" placeholder="Type your message..." required />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+      <canvas id="moodChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Your custom JS logic -->
+  <script src="c.js"></script>
+</body>
+</html>

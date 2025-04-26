@@ -17,8 +17,6 @@
 
     <hr>
 
-    <h2>Or Sign Up with Google</h2>
-    <button onclick="googleSignUp()">Sign Up with Google</button>
   </div>
 
   <script>
@@ -27,7 +25,7 @@
       const formData = new FormData(e.target);
       const name = formData.get('name');
       const email = formData.get('email');
-      console.log("Email value:", email);
+     
       const password = formData.get('password');
       const confirmPassword = formData.get('confirmPassword');
 

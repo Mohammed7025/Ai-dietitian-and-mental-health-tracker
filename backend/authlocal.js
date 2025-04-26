@@ -53,10 +53,35 @@ router.post('/login', async (req, res) => {
 
     // At this point, user is authenticated locally
     // Typically, you'd issue a JWT or session here
-    res.json({ message: 'Local login successful!' });
+    res.json({ message: 'Local login successful!', userId: user._id });
   } catch (error) {
     console.error('Local login error:', error);
     res.status(500).json({ error: 'Error logging in' });
+  }
+});
+
+// Forgot/Change Password
+router.post('/forgot-change-password', async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: 'User with this email does not exist' });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user's password in the database
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: 'Password changed successfully!' });
+  } catch (error) {
+    console.error('Forgot Change Password error:', error);
+    res.status(500).json({ error: 'Error changing password' });
   }
 });
 

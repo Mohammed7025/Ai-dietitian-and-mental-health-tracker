@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MindMend AI - Mental Wellness Companion</title>
+    <link rel="stylesheet" href="gpt.css">
+</head>
+<body>
+    <div class="container">
+        <h1>MindMend AI</h1>
+        <div class="chat-container">
+            <div id="chatBox"></div>
+            <textarea id="userInput" placeholder="How are you feeling today?"></textarea>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="moodChart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="gptscript.js"></script>
+</body>
+</html>

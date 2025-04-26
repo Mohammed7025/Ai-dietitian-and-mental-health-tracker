@@ -20,7 +20,7 @@ nav ul {
   padding: 0;
   display: flex;
   justify-content: center;
-  background: #42A5F5;
+  background: #9ab8f0;
 }
 
 nav ul li {
@@ -76,6 +76,10 @@ header h1 {
 
 /* Navbar */
 nav {
+  position: fixed;
+  bottom: 60;
+    left: 0;
+    width: 100%;  
   margin-top: 10px;
 }
 
@@ -117,33 +121,99 @@ nav ul li a:hover {
 }
 
 #dietSection {
-  background-image: url('11.jpg');
+  padding-top: 100px;
+  color: #ffffff; 
+
+  background-image: url('1.jpg');
 }
 
 #moodSection {
+  color: #003366; 
   background-image: url('2.jpg');
 }
 
 #journalSection {
+  color: #003366; 
   background-image: url('11.jpg');
 }
 
 #progressSection {
-  background-image: url('top.jpg');
+  color: #003366; 
+  background-image: url('22.jpg');
 }
 
+
 #contactSection {
-  background-image: url('22.jpg');
+  background: linear-gradient(135deg, #0E2433, #1A496B); /* Deep Blue Gradient */
+  color: #FFFFFF;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  color: #003366;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #64B5F6;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #F0F8FF;
+}
+
+textarea {
+  resize: none;
+}
+
+button[type="submit"] {
+  background-color: #FFA726; /* Warm Orange */
+  color: #ffffff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 18px;
+}
+
+button[type="submit"]:hover {
+  background-color: #F57C00;
+}
+
+.contact-info {
+  margin-top: 30px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.contact-info p {
+  margin: 5px 0;
 }
 
 .content-section h2 {
   font-size: 32px;
   margin-bottom: 15px;
+  scroll-margin-top: 100px; 
+
 }
 
 .content-section p {
   font-size: 18px;
   margin-bottom: 20px;
+  scroll-margin-top: 100px; 
 }
 
 button {

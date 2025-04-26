@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HopeBot - Your Mental Health Support</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to HopeBot ❤️</h1>
+        <p>Your caring and empathetic mental health support chatbot.</p>
+        
+        <div class="chat-container">
+            <div id="chat-box">
+                <div class="bot-message">Hello! How are you feeling today? 😊</div>
+            </div>
+
+            <form id="chat-form">
+                <input type="text" id="user-input" placeholder="Type your message..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+
+        <div class="journal-section">
+            <h2>Journal Your Thoughts</h2>
+            <textarea id="journal-entry" placeholder="Write about your feelings..."></textarea>
+            <button id="analyze-journal">Analyze Mood</button>
+            <p id="journal-analysis-result"></p>
+        </div>
+
+        <div class="graph-section">
+            <h2>Your Mental Health Progress</h2>
+            <canvas id="moodChart"></canvas>
+        </div>
+    </div>
+
+    <script src="chatscrpit.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
