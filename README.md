@@ -38,35 +38,36 @@ Once cloned, navigate to the project directory:
 2. Navigate to the Project Directory
 Once cloned, navigate to the project directory:
 
-```bash
-Copy
-Edit
-cd Ai-dietitian-and-mental-health-tracker
+     ```bash
+   Copy
+   Edit
+   cd Ai-dietitian-and-mental-health-tracker
+
 3. Install Dependencies
 Install all the necessary packages for the project:
 
-bash
-Copy
-Edit
-npm install
+    ```bash
+   Copy
+   Edit
+   npm install
 4. Set Up the Backend Server
 The backend is built with Node.js. Ensure you have Node.js and npm installed on your local machine.
 
 To run the main backend server, use the following command:
 
-bash
-Copy
-Edit
-node server.js
+    ```bash
+     Copy
+     Edit
+     node server.js
 Once the server is running, the application should be accessible at http://localhost:3000 in your browser.
 
 5. Set Up the Chatbot Server
 The chatbot runs from server1.js. To launch the chatbot, use the following command in a new terminal window:
 
-bash
-Copy
-Edit
-node server1.js
+   ```bash
+     Copy
+     Edit
+     node server1.js
 Once the chatbot server is running, it will be accessible at http://localhost:4000 (or whichever port you have set in server1.js).
 
 6. Set Up the Database
@@ -92,20 +93,20 @@ Add your MongoDB connection URI in the .env file:
 
 Example .env file:
 
-ini
-Copy
-Edit
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
+     ****ini
+    Copy
+    Edit
+    MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
 Replace <username>, <password>, and <dbname> with your MongoDB Atlas credentials.
 
 e. Running the Servers with Database Connection
 Once your .env file is ready with the MongoDB URI, run both servers again:
 
-bash
-Copy
-Edit
-node server.js   # For the main backend
-node server1.js  # For the chatbot
+     ```bash
+      Copy
+      Edit
+      node server.js   # For the main backend
+      node server1.js  # For the chatbot
 Now both the backend and the chatbot should be fully connected to the database and operational.
 
 7. Troubleshooting
@@ -120,9 +121,9 @@ Verify that the .env file is properly formatted and located in the root of your 
 8. Additional Notes
 For any modifications to the backend or the AI features, feel free to contact me via email at mohammedroshan1020@gmail.com.
 
-vbnet
-Copy
-Edit
+        vbnet
+        Copy
+        Edit
 
 ### Key Points:
 1. **Running Multiple Servers**: Since you're running two servers (`server.js` for the main backend and `server1.js` for the chatbot), make sure both are mentioned and easy to run.
