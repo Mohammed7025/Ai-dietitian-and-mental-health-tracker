@@ -196,11 +196,9 @@ Double-check your MongoDB URI and ensure that your Atlas cluster is up and runni
 Verify that the .env file is properly formatted and located in the root of your project.
 
 8. Additional Notes
-For any modifications to the backend or the AI features, feel free to contact me via email at mohammed1020@gmail.com.
+For any modifications to the backend or the AI features, feel free to contact me via email at mohammedroshan1020@gmail.com.
 
-vbnet
-Copy
-Edit
+
 
 ### Key Points:
 1. **Running Multiple Servers**: Since you're running two servers (`server.js` for the main backend and `server1.js` for the chatbot), make sure both are mentioned and easy to run.
