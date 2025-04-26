@@ -38,7 +38,7 @@ Once cloned, navigate to the project directory:
 2. Navigate to the Project Directory
 Once cloned, navigate to the project directory:
 
-bash
+```bash
 Copy
 Edit
 cd Ai-dietitian-and-mental-health-tracker
