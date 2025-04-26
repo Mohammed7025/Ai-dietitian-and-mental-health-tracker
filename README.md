@@ -92,7 +92,7 @@ Example .env file:
   
     
     MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
-Replace "<username>" , "<password>", and "<dbname>" with your MongoDB Atlas credentials.
+Replace username, password, and dbname with your MongoDB Atlas credentials.(also remove angular brackets of them)
 
 e. Running the Servers with Database Connection
 Once your .env file is ready with the MongoDB URI, run both servers again:
